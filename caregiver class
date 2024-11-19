@@ -1,0 +1,24 @@
+class Caregiver:
+    def __init__(self,name,phone,email,payrate,hours):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.payrate = payrate
+        self.hours = hours
+        self.days_to_work = []
+    am = {}
+    pm = {}
+
+    
+    def set_preferences(self):
+        days = ["monday","tuesday","wednesday", "thursday", "friday", "saturday","sunday"]
+        for day in days:
+            availability_am = input(f"What is your availability for {day} am?: ")
+            self.am[day] = availability_am
+            availability_pm = input(f"What is your availability for {day} pm?: ")
+            self.pm[day] = availability_pm
+
+anne = Caregiver("anne","443-891-3933","anne@gmail.com",20,10)
+anne.set_preferences()
+anne.am
+anne.pm
