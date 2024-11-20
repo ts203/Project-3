@@ -22,3 +22,49 @@ anne = Caregiver("anne","443-891-3933","anne@gmail.com",20,10)
 anne.set_preferences()
 anne.am
 anne.pm
+
+class Caregiver:
+    caregivers_availability = {}
+
+    def __init__(self, name, phone, email, payrate, hours):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.payrate = payrate
+        self.hours = hours
+        self.am = {}
+        self.pm = {}
+
+    def set_preferences(self):
+        days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        for day in days:
+            availability_am = input(f"What is your availability for {day} am?: ")
+            self.am[day] = availability_am
+            availability_pm = input(f"What is your availability for {day} pm?: ")
+            self.pm[day] = availability_pm
+        Caregiver.caregivers_availability[self.name] = {"am": self.am, "pm": self.pm}
+
+    def generate_calendar():
+        calendar = {}
+        for caregiver, availability in Caregiver.caregivers_availability.items():
+            for day, time in availability["am"].items():
+                if day not in calendar:
+                    calendar[day] = {"am": [], "pm": []}
+                if time in ["available", "preferred"]:
+                    calendar[day]["am"].append(f"{caregiver} ({time})")
+            for day, time in availability["pm"].items():
+                if time in ["available", "preferred"]:
+                    calendar[day]["pm"].append(f"{caregiver} ({time})")
+        return calendar
+
+
+anne = Caregiver("anne", "443-891-3933", "anne@gmail.com", 20, 10)
+anne.set_preferences()
+
+john = Caregiver("john", "301-287-5690", "john@gmail.com", 25, 15)
+john.set_preferences()
+
+consolidated_calendar = Caregiver.generate_calendar()
+print("Consolidated Calendar:")
+for day, times in consolidated_calendar.items():
+    print(f"{day.capitalize()} - AM: {', '.join(times['am'])} | PM: {', '.join(times['pm'])}")
