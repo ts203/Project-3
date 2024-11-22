@@ -1,0 +1,115 @@
+class Caregiver:
+    def __init__(self,name,phone,email,payrate,hours):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.payrate = payrate
+        self.hours = hours
+        self.days_to_work = []
+        self.am = {}
+        self.pm = {}
+
+    
+    def set_preferences(self):
+        days = ["monday","tuesday","wednesday", "thursday", "friday", "saturday","sunday"]
+        for day in days:
+            availability_am = input(f"What is your availability for {day} am?: ")
+            self.am[day] = availability_am
+            availability_pm = input(f"What is your availability for {day} pm?: ")
+            self.pm[day] = availability_pm
+
+anne = Caregiver("anne","443-891-3933","anne@gmail.com",20,10)
+anne.set_preferences()
+anne.am
+anne.pm
+
+class Caregiver:
+    caregivers_availability = {}
+
+    def __init__(self, name, phone, email, payrate, hours):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.payrate = payrate
+        self.hours = hours
+        self.am = {}
+        self.pm = {}
+
+    def set_preferences(self):
+        days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        for day in days:
+            availability_am = input(f"What is your availability for {day} am?: ")
+            self.am[day] = availability_am
+            availability_pm = input(f"What is your availability for {day} pm?: ")
+            self.pm[day] = availability_pm
+        Caregiver.caregivers_availability[self.name] = {"am": self.am, "pm": self.pm}
+
+    def generate_calendar():
+        calendar = {}
+        for caregiver, availability in Caregiver.caregivers_availability.items():
+            for day, time in availability["am"].items():
+                if day not in calendar:
+                    calendar[day] = {"am": [], "pm": []}
+                if time in ["available", "preferred"]:
+                    calendar[day]["am"].append(f"{caregiver} ({time})")
+            for day, time in availability["pm"].items():
+                if time in ["available", "preferred"]:
+                    calendar[day]["pm"].append(f"{caregiver} ({time})")
+        return calendar
+
+
+anne = Caregiver("anne", "443-891-3933", "anne@gmail.com", 20, 10)
+anne.set_preferences()
+
+john = Caregiver("john", "301-287-5690", "john@gmail.com", 25, 15)
+john.set_preferences()
+
+consolidated_calendar = Caregiver.generate_calendar()
+print("Consolidated Calendar:")
+for day, times in consolidated_calendar.items():
+    print(f"{day.capitalize()} - AM: {', '.join(times['am'])} | PM: {', '.join(times['pm'])}")
+
+#NEW CLASS - PAY CLASS
+class Pay(Caregiver):
+    def __init__(self, caregivers):
+        self.caregivers = caregivers
+
+    def calculate_weekly_hours_and_pay(self):
+        weekly_summary = {}
+        for caregiver in self.caregivers:
+            total_hours = 0
+            # Each shift (AM or PM) counts as 6 hours
+            shift_hours = 6
+            for day in caregiver.am.keys():
+                if caregiver.am[day] in ["available", "preferred"]:
+                    total_hours += shift_hours
+                if caregiver.pm[day] in ["available", "preferred"]:
+                    total_hours += shift_hours
+            caregiver.hours = total_hours
+            weekly_pay = total_hours * caregiver.payrate
+            weekly_summary[caregiver.name] = {"hours": total_hours, "pay": weekly_pay}
+        return weekly_summary
+
+
+# Instantiate caregivers
+anne = Caregiver("anne", "443-891-3933", "anne@gmail.com", 20, 10)
+anne.set_preferences()
+
+john = Caregiver("john", "301-287-5690", "john@gmail.com", 25, 15)
+john.set_preferences()
+
+# Consolidate calendar (from earlier code)
+consolidated_calendar = Caregiver.generate_calendar()
+print("Consolidated Calendar:")
+for day, times in consolidated_calendar.items():
+    print(f"{day.capitalize()} - AM: {', '.join(times['am'])} | PM: {', '.join(times['pm'])}")
+
+# Calculate weekly pay
+caregivers = [anne, john]
+pay_calculator = Pay(caregivers)
+weekly_summary = pay_calculator.calculate_weekly_hours_and_pay()
+
+# Display weekly summary
+print("\nWeekly Pay Summary:")
+for caregiver, summary in weekly_summary.items():
+    print(f"{caregiver}: {summary['hours']} hours worked, ${summary['pay']} earned")
